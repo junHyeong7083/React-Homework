@@ -1,4 +1,5 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect } from "react";
+import Image from "next/image";
 import Header from "../components/Header";
 import ServiceCard from "../components/ServiceCard";
 import Socials from "../components/Socials";
@@ -16,28 +17,20 @@ import data from "../data/portfolio.json";
 
 export default function Home() {
   // Ref
-  const workRef = useRef();
-  const aboutRef = useRef();
-  const textOne = useRef();
-  const textTwo = useRef();
-  const textThree = useRef();
-  const textFour = useRef();
+  const workRef = useRef(null);
+  const aboutRef = useRef(null);
+  const textOne = useRef(null);
+  const textTwo = useRef(null);
+  const textThree = useRef(null);
+  const textFour = useRef(null);
 
   // Handling Scroll
   const handleWorkScroll = () => {
-    window.scrollTo({
-      top: workRef.current.offsetTop,
-      left: 0,
-      behavior: "smooth",
-    });
+    workRef.current.scrollIntoView({ behavior: "smooth" });
   };
 
   const handleAboutScroll = () => {
-    window.scrollTo({
-      top: aboutRef.current.offsetTop,
-      left: 0,
-      behavior: "smooth",
-    });
+    aboutRef.current.scrollIntoView({ behavior: "smooth" });
   };
 
   useIsomorphicLayoutEffect(() => {
@@ -48,8 +41,13 @@ export default function Home() {
     );
   }, []);
 
+  useEffect(() => {
+    // Scroll to top of the page when the component mounts
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
-    <div className={`relative ${data.showCursor && "cursor-none"}`}>
+    <div className={`relative ${data.showCursor ? "cursor-none" : ""}`}>
       {data.showCursor && <Cursor />}
       <Head>
         <title>{data.name}</title>
@@ -67,25 +65,25 @@ export default function Home() {
           <div className="mt-5">
             <h1
               ref={textOne}
-              className="w-4/5 p-1 text-3xl tablet:text-6xl laptop:text-6xl laptopl:text-8xl tablet:p-2 text-bold mob:w-full laptop:w-4/5"
+              className="w-4/5 p-1 text-3xl tablet:text-6xl laptop:text-6xl laptopl:text-8xl tablet:p-2 font-bold mob:w-full laptop:w-4/5"
             >
               {data.headerTaglineOne}
             </h1>
             <h1
               ref={textTwo}
-              className="w-full p-1 text-3xl tablet:text-6xl laptop:text-6xl laptopl:text-8xl tablet:p-2 text-bold laptop:w-4/5"
+              className="w-full p-1 text-3xl tablet:text-6xl laptop:text-6xl laptopl:text-8xl tablet:p-2 font-bold laptop:w-4/5"
             >
               {data.headerTaglineTwo}
             </h1>
             <h1
               ref={textThree}
-              className="w-full p-1 text-3xl tablet:text-6xl laptop:text-6xl laptopl:text-8xl tablet:p-2 text-bold laptop:w-4/5"
+              className="w-full p-1 text-3xl tablet:text-6xl laptop:text-6xl laptopl:text-8xl tablet:p-2 font-bold laptop:w-4/5"
             >
               {data.headerTaglineThree}
             </h1>
             <h1
               ref={textFour}
-              className="w-full p-1 text-3xl tablet:text-6xl laptop:text-6xl laptopl:text-8xl tablet:p-2 text-bold laptop:w-4/5"
+              className="w-full p-1 text-3xl tablet:text-6xl laptop:text-6xl laptopl:text-8xl tablet:p-2 font-bold laptop:w-4/5"
             >
               {data.headerTag}
             </h1>
@@ -95,7 +93,12 @@ export default function Home() {
         </div>
         <div className="p-2 mt-10 laptop:mt-30 laptop:p-0" ref={workRef}>
           {/* 대체된 이미지 */}
-          <img src="https://ghchart.rshah.org/junHyeong7083" alt="." />
+          <Image
+            src="https://ghchart.rshah.org/junHyeong7083"
+            alt="GitHub Contributions"
+            width={500}
+            height={150}
+          />
 
           <div className="grid grid-cols-1 gap-4 mt-5 laptop:mt-10 tablet:grid-cols-2">
             {data.projects.map((project) => (
@@ -106,14 +109,17 @@ export default function Home() {
                 description={project.description}
                 onClick={() => window.open(project.url)}
               >
-                <NFTCard nftId={project.nftId} metaMaskAddress="0xC30b472b15CBAfBE4407f646A637E2fBD79355a8" />
+                <NFTCard
+                  nftId={project.nftId}
+                  metaMaskAddress="0xC30b472b15CBAfBE4407f646A637E2fBD79355a8"
+                />
               </WorkCard>
             ))}
           </div>
         </div>
 
         <div className="p-2 mt-10 laptop:mt-30 laptop:p-0">
-          <h1 className="text-2xl text-bold">Services.</h1>
+          <h1 className="text-2xl font-bold">Services.</h1>
           <div className="grid grid-cols-1 gap-6 mt-5 tablet:m-10 laptop:grid-cols-2">
             {data.services.map((service, index) => (
               <ServiceCard
@@ -133,8 +139,8 @@ export default function Home() {
           </div>
         )}
         <div className="p-2 mt-10 laptop:mt-40 laptop:p-0" ref={aboutRef}>
-          <h1 className="text-2xl tablet:m-10 text-bold">About.</h1>
-          <p className="w-full mt-2 text-xl tablet:m-10 laptop:text-3xl laptop:w-3/5">
+          <h1 className="text-2xl m-10 font-bold">About.</h1>
+          <p className="w-full mt-2 text-xl m-10 laptop:text-3xl laptop:w-3/5">
             {data.aboutpara}
           </p>
         </div>
